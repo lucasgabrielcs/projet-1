@@ -3,121 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo - LocaFood</title>
+    <title>Gestão - LocaFood</title>
     <style>
-        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; color: #333; }
+        /* Estilo Base */
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; margin: 0; padding-bottom: 50px; }
         
         /* Navbar */
-        .navbar { background-color: #2e7d32; padding: 15px 40px; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .navbar h1 { margin: 0; font-size: 24px; }
+        .navbar { background-color: #2e7d32; padding: 15px 40px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .btn-add { background: white; color: #2e7d32; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.2s; text-decoration: none; display: inline-block;}
+        .btn-add:hover { background: #e8f5e9; transform: scale(1.05); }
 
-        /* Container da Grade */
-        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-        .page-title { margin-bottom: 30px; color: #1b5e20; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; }
+        /* Container */
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
 
-        /* A GRADE (Grid) Mágica */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Cria colunas automáticas */
-            gap: 30px; /* Espaço entre os cartões */
-        }
+        /* Grade de Produtos */
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
 
-        /* O Cartão (Card) */
-        .card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.2s, box-shadow 0.2s;
-            text-decoration: none; /* Remove sublinhado do link */
-            color: inherit;
-            border: 1px solid #eee;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card:hover {
-            transform: translateY(-5px); /* Sobe um pouquinho ao passar o mouse */
-            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
-            border-color: #2e7d32;
-        }
-
-        /* Área da Imagem (Placeholder por enquanto) */
-        .card-image {
-            height: 180px;
-            background-color: #e8f5e9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #2e7d32;
-            font-size: 40px;
-        }
-
-        .card-content { padding: 20px; }
+        /* Cartão */
+        .card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; display: flex; flex-direction: column; justify-content: space-between; }
+        .card h3 { margin-top: 0; color: #1b5e20; }
+        .card-actions { margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px; display: flex; gap: 10px; }
         
-        .card-title { 
-            font-size: 18px; 
-            font-weight: bold; 
-            margin: 0 0 10px 0; 
-            color: #1b5e20; 
-        }
-        
-        .card-desc {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 15px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2; /* Corta o texto após 2 linhas */
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
+        /* Botões Pequenos */
+        .btn-sm { flex: 1; padding: 8px; text-align: center; border-radius: 5px; text-decoration: none; font-size: 14px; cursor: pointer; border: none; font-weight: bold;}
+        .btn-edit { background: #e3f2fd; color: #1565c0; }
+        .btn-del { background: #ffebee; color: #c62828; }
+        .btn-view { background: #e8f5e9; color: #2e7d32; }
 
-        .badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
+        /* --- O SEGREDO DOS MODAIS (Janelas) --- */
+        .modal-overlay {
+            display: none; /* Escondido por padrão */
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); /* Fundo escuro */
+            z-index: 1000;
+            justify-content: center; align-items: center;
         }
-        .badge-success { background: #e8f5e9; color: #2e7d32; }
-        .badge-warning { background: #fff3e0; color: #ef6c00; }
+        .modal-box {
+            background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative;
+        }
+        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #aaa; }
+        
+        /* Formulários dentro do Modal */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .btn-submit { width: 100%; padding: 12px; background: #2e7d32; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+        .btn-danger-submit { width: 100%; padding: 12px; background: #c62828; color: white; border: none; border-radius: 5px; cursor: pointer; }
 
     </style>
 </head>
 <body>
 
     <div class="navbar">
-        <h1>🌱 LocaFood</h1>
+        <h1>🌱 LocaFood <small style="font-size: 14px; opacity: 0.8;">Gestão</small></h1>
+        <button onclick="openModal('modal-novo')" class="btn-add">+ Novo Produto</button>
     </div>
 
     <div class="container">
-        <h2 class="page-title">Nossos Produtos</h2>
-
+        
         <div class="products-grid">
             {% for produto in produtos %}
-                <a href="{% url 'produto_publico' produto.id %}" class="card">
-                    
-                    <div class="card-image">
-                        🌿
-                    </div>
+            <div class="card">
+                <div>
+                    <h3>{{ produto.nome }}</h3>
+                    <p style="color: #666; font-size: 14px;">{{ produto.descricao }}</p>
+                    {% if produto.certificado %}
+                        <span style="background:#e8f5e9; color:#2e7d32; padding:3px 8px; border-radius:4px; font-size:12px;">Certificado</span>
+                    {% else %}
+                        <span style="background:#fff3e0; color:#ef6c00; padding:3px 8px; border-radius:4px; font-size:12px;">Não conforme</span>
+                    {% endif %}
+                </div>
 
-                    <div class="card-content">
-                        <h3 class="card-title">{{ produto.nome }}</h3>
-                        <p class="card-desc">{{ produto.descricao }}</p>
-                        
-                        {% if produto.certificado %}
-                            <span class="badge badge-success">✅ Certificado</span>
-                        {% else %}
-                            <span class="badge badge-warning">❌ Sem Certificado</span>
-                        {% endif %}
-                    </div>
-                </a>
-            {% empty %}
-                <p>Nenhum produto cadastrado ainda.</p>
+                <div class="card-actions">
+                    <a href="{% url 'produto_publico' produto.id %}" class="btn-sm btn-view" target="_blank">Ver</a>
+                    <button onclick="openModal('modal-editar-{{ produto.id }}')" class="btn-sm btn-edit">✏️ Editar</button>
+                    <button onclick="openModal('modal-excluir-{{ produto.id }}')" class="btn-sm btn-del">🗑️ Excluir</button>
+                </div>
+            </div>
+
+            <div id="modal-editar-{{ produto.id }}" class="modal-overlay">
+                <div class="modal-box">
+                    <span onclick="closeModal('modal-editar-{{ produto.id }}')" class="close-btn">&times;</span>
+                    <h2>Editar {{ produto.nome }}</h2>
+                    <form action="{% url 'editar_produto' produto.id %}" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>Nome</label>
+                            <input type="text" name="nome" value="{{ produto.nome }}" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Descrição</label>
+                            <textarea name="descricao" class="form-control" rows="3">{{ produto.descricao }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" name="certificado" {% if produto.certificado %}checked{% endif %}> 
+                                Produto Certificado?
+                            </label>
+                        </div>
+                        <button type="submit" class="btn-submit">Salvar Alterações</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="modal-excluir-{{ produto.id }}" class="modal-overlay">
+                <div class="modal-box" style="text-align: center;">
+                    <span onclick="closeModal('modal-excluir-{{ produto.id }}')" class="close-btn">&times;</span>
+                    <h2 style="color: #c62828;">Tem certeza?</h2>
+                    <p>Você vai apagar <strong>{{ produto.nome }}</strong> para sempre.</p>
+                    <form action="{% url 'excluir_produto' produto.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-danger-submit">Sim, Excluir</button>
+                    </form>
+                </div>
+            </div>
             {% endfor %}
         </div>
-
     </div>
+
+    <div id="modal-novo" class="modal-overlay">
+        <div class="modal-box">
+            <span onclick="closeModal('modal-novo')" class="close-btn">&times;</span>
+            <h2>Novo Produto</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Nome</label>
+                    {{ form.nome }} </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    {{ form.descricao }}
+                </div>
+                <div class="form-group">
+                    <label>Certificado?</label>
+                    {{ form.certificado }}
+                </div>
+                <button type="submit" class="btn-submit">Cadastrar Produto</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+        
+        // Fechar se clicar fora da caixa
+        window.onclick = function(event) {
+            if (event.target.className === 'modal-overlay') {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
 
 </body>
 </html>
