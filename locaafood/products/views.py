@@ -23,3 +23,9 @@ def produto_publico(request, pk):
     
     
     return render(request, 'products/detalhe_produto.html', {'produto': produto})
+
+def lista_produtos(request):
+    
+    produtos = Produtos.objects.all()  
+    
+    return render(request, 'products/lista_produtos.html', {'produtos': produtos})

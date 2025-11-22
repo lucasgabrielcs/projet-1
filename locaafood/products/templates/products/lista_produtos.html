@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo - LocaFood</title>
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; color: #333; }
+        
+        /* Navbar */
+        .navbar { background-color: #2e7d32; padding: 15px 40px; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .navbar h1 { margin: 0; font-size: 24px; }
+
+        /* Container da Grade */
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .page-title { margin-bottom: 30px; color: #1b5e20; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; }
+
+        /* A GRADE (Grid) Mágica */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Cria colunas automáticas */
+            gap: 30px; /* Espaço entre os cartões */
+        }
+
+        /* O Cartão (Card) */
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none; /* Remove sublinhado do link */
+            color: inherit;
+            border: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px); /* Sobe um pouquinho ao passar o mouse */
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            border-color: #2e7d32;
+        }
+
+        /* Área da Imagem (Placeholder por enquanto) */
+        .card-image {
+            height: 180px;
+            background-color: #e8f5e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2e7d32;
+            font-size: 40px;
+        }
+
+        .card-content { padding: 20px; }
+        
+        .card-title { 
+            font-size: 18px; 
+            font-weight: bold; 
+            margin: 0 0 10px 0; 
+            color: #1b5e20; 
+        }
+        
+        .card-desc {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Corta o texto após 2 linhas */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .badge-success { background: #e8f5e9; color: #2e7d32; }
+        .badge-warning { background: #fff3e0; color: #ef6c00; }
+
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <h1>🌱 LocaFood</h1>
+    </div>
+
+    <div class="container">
+        <h2 class="page-title">Nossos Produtos</h2>
+
+        <div class="products-grid">
+            {% for produto in produtos %}
+                <a href="{% url 'produto_publico' produto.id %}" class="card">
+                    
+                    <div class="card-image">
+                        🌿
+                    </div>
+
+                    <div class="card-content">
+                        <h3 class="card-title">{{ produto.nome }}</h3>
+                        <p class="card-desc">{{ produto.descricao }}</p>
+                        
+                        {% if produto.certificado %}
+                            <span class="badge badge-success">✅ Certificado</span>
+                        {% else %}
+                            <span class="badge badge-warning">❌ Sem Certificado</span>
+                        {% endif %}
+                    </div>
+                </a>
+            {% empty %}
+                <p>Nenhum produto cadastrado ainda.</p>
+            {% endfor %}
+        </div>
+
+    </div>
+
+</body>
+</html>
