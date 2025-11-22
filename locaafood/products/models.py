@@ -15,13 +15,18 @@ class Produtos(models.Model):
     def __str__(self):
         return self.nome
     
-    def save(self, *args , **kwargs ):
-        imagem_qr = qrcode.make(self.nome)
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            super().save(*args, **kwargs)
+
+        website_url = f"http://127.0.0.1:8000/api/produto/{self.pk}/visualizar/"
+        
+        imagem_qr = qrcode.make(website_url)
         buffer = BytesIO()
         imagem_qr.save(buffer)
         buffer.seek(0)
-        if not self.qr_code:
-            self.qr_code.save(f'{self.nome}.png', File(buffer), save=False)
+
+        self.qr_code.save(f'{self.nome}_{self.pk}.png', File(buffer), save=False)
+
+        
         super().save(*args, **kwargs)
-        
-        

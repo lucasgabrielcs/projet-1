@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ produto.nome }} - LocaFood</title>
+    <style>
+        /* Reset básico */
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; color: #333; }
+        
+        /* Barra de Navegação */
+        .navbar { background-color: #2e7d32; padding: 15px 40px; color: white; display: flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .navbar h1 { margin: 0; font-size: 24px; font-weight: 600; }
+        
+        /* Layout Principal */
+        .container { max-width: 1000px; margin: 40px auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: grid; grid-template-columns: 2fr 1fr; gap: 40px; }
+        
+        /* Tipografia e Elementos */
+        h2 { color: #1b5e20; margin-top: 0; font-size: 32px; }
+        .label { font-size: 14px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; font-weight: bold; }
+        .info-box { margin-bottom: 25px; }
+        .desc-text { line-height: 1.6; font-size: 18px; color: #444; }
+        
+        /* Badges (Etiquetas) */
+        .badge { display: inline-block; padding: 6px 12px; border-radius: 4px; font-weight: bold; font-size: 14px; margin-right: 10px; }
+        .badge-success { background-color: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+        .badge-warning { background-color: #fff3e0; color: #ef6c00; border: 1px solid #ffe0b2; }
+        
+        /* Coluna Lateral (QR Code) */
+        .sidebar { background-color: #fafafa; padding: 20px; border-radius: 8px; text-align: center; border: 1px solid #eee; }
+        .qr-img { width: 100%; max-width: 200px; height: auto; mix-blend-mode: multiply; }
+        
+        /* Responsividade para celular (caso alguém abra no móvel) */
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; margin: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <h1>🌱 LocaFood</h1>
+    </div>
+
+    <div class="container">
+        
+        <div class="main-content">
+            <div class="info-box">
+                <span class="badge badge-success">Lote #{{ produto.id }}</span>
+                {% if produto.certified %}
+                    <span class="badge badge-success">✅ Certificado Orgânico</span>
+                {% else %}
+                    <span class="badge badge-warning">⚠️ Em Análise</span>
+                {% endif %}
+            </div>
+
+            <h2>{{ produto.nome }}</h2>
+            
+            <div class="info-box">
+                <div class="label">Descrição do Produto</div>
+                <p class="desc-text">{{ produto.descricao }}</p>
+            </div>
+            
+            </div>
+
+        <div class="sidebar">
+            <h3>Rastreabilidade</h3>
+            <p style="font-size: 14px; color: #666;">Escaneie para compartilhar</p>
+            
+            {% if produto.qr_code %}
+                <img src="{{ produto.qr_code.url }}" class="qr-img" alt="QR Code do Produto">
+                <br>
+                <a href="{{ produto.qr_code.url }}" download style="display: inline-block; margin-top: 10px; color: #2e7d32; text-decoration: none; font-size: 14px;">⬇ Baixar Imagem</a>
+            {% else %}
+                <p>Sem código gerado.</p>
+            {% endif %}
+        </div>
+
+    </div>
+
+</body>
+</html>
