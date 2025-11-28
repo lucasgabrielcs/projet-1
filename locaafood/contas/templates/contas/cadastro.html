@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cadastro - LocaFood</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #e8f5e9; display: flex; justify-content: center; padding-top: 50px; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        h2 { color: #2e7d32; text-align: center; margin-top: 0; }
+        label { display: block; margin-top: 15px; font-weight: bold; color: #555; }
+        input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background-color: #2e7d32; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; margin-top: 25px; font-weight: bold; }
+        button:hover { background-color: #1b5e20; }
+        .help-text { font-size: 12px; color: #888; margin-top: 2px; }
+        ul.errorlist { color: red; list-style: none; padding: 0; margin: 5px 0; font-size: 13px; }
+    </style>
+    
+    <script>
+        // Função para mostrar o campo "Nome da Companhia" apenas se for EMPRESA
+        function verificarTipoUsuario() {
+            var select = document.getElementById("id_tipo_usuario");
+            var campoCompanhia = document.getElementById("campo-companhia");
+            
+            if (select && select.value === 'EMPRESA') {
+                campoCompanhia.style.display = "block";
+            } else {
+                campoCompanhia.style.display = "none";
+            }
+        }
+
+        window.onload = function() {
+            var select = document.getElementById("id_tipo_usuario");
+            if(select) {
+                select.addEventListener("change", verificarTipoUsuario);
+                verificarTipoUsuario(); // Roda ao abrir a página
+            }
+        };
+    </script>
+</head>
+<body>
+
+<div class="card">
+    <h2>📝 Criar Conta</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <label>Nome de Usuário:</label>
+        {{ form.username }}
+        {{ form.username.errors }}
+        
+        <label>E-mail:</label>
+        {{ form.email }}
+        {{ form.email.errors }}
+
+        <label>Tipo de Conta:</label>
+        {{ form.tipo_usuario }}
+        {{ form.tipo_usuario.errors }}
+
+        <div id="campo-companhia" style="display: none; background: #f9f9f9; padding: 15px; border-left: 4px solid #2e7d32; margin-top: 15px;">
+            <label style="margin-top: 0;">Nome da Empresa Certificadora/Produtora:</label>
+            {{ form.nome_companhia }}
+            {{ form.nome_companhia.errors }}
+        </div>
+
+        <div style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px;">
+            <label>Senha:</label>
+            </div>
+        
+        {% for field in form %}
+            {% if field.name == 'password' or 'password' in field.name %}
+                <label>{{ field.label }}</label>
+                {{ field }}
+                <div class="help-text">{{ field.help_text }}</div>
+                {{ field.errors }}
+            {% endif %}
+        {% endfor %}
+
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <p style="text-align: center; margin-top: 20px;">
+        Já tem conta? <a href="{% url 'login' %}" style="color: #2e7d32; font-weight: bold;">Fazer Login</a>
+    </p>
+</div>
+
+</body>
+</html>

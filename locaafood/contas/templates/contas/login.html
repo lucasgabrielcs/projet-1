@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Entrar - LocaFood</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-card { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 350px; text-align: center; }
+        h2 { color: #2e7d32; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #2e7d32; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; margin-top: 15px; font-weight: bold;}
+        button:hover { background-color: #1b5e20; }
+        .links { margin-top: 20px; font-size: 14px; }
+        a { color: #2e7d32; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <h2>🔐 Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        
+        <div style="text-align: left;">
+            <label>Usuário:</label>
+            {{ form.username }}
+        </div>
+        <div style="text-align: left; margin-top: 10px;">
+            <label>Senha:</label>
+            {{ form.password }}
+        </div>
+
+        <button type="submit">Entrar no Sistema</button>
+    </form>
+
+    <div class="links">
+        Ainda não tem conta? <br>
+        <a href="{% url 'cadastro' %}"><strong>Criar nova conta</strong></a>
+    </div>
+</div>
+
+</body>
+</html>

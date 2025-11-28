@@ -12,6 +12,7 @@ urlpatterns = [
     path('catalogo/', lista_produtos, name='lista_produtos'),
     path('produto/<int:pk>/editar/', editar_produto, name='editar_produto'),
     path('produto/<int:pk>/excluir/', excluir_produto, name='excluir_produto'),
+    path('auth/', include('contas.urls')),
 ]
 
     
